@@ -12,6 +12,27 @@
 
 #include "Helpers.h"
 
+std::wstring s2ws(const std::string& s)
+{
+	int len;
+	int slength = (int)s.length() + 1;
+	len = MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, 0, 0);
+	wchar_t* buf = new wchar_t[len];
+	MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, buf, len);
+	std::wstring r(buf);
+	delete[] buf;
+	return r;
+}
+
+void LogMessage( const char* pszFormat, ...) {
+	static char s_acBuf[2048]; // this here is a caveat!
+	va_list args;
+	va_start(args, pszFormat);
+	vsprintf_s(s_acBuf, pszFormat, args);
+	OutputDebugString(s2ws(s_acBuf).c_str() );
+	va_end(args);
+}
+
 void GetDesktopResolution(int& horizontal, int& vertical) {
 	RECT desktop;
 	const HWND hDesktop = GetDesktopWindow();

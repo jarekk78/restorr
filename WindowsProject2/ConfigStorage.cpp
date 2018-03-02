@@ -40,6 +40,9 @@ void storeConfig(std::string configName, std::vector<OpenWindowsStruct*>* titles
 	myfile << "Writing this to a file.\n";
 	for (std::vector<OpenWindowsStruct*>::iterator it = titles->begin(); it != titles->end(); ++it) {
 		OpenWindowsStruct entryStructP = **it;
+		LogMessage("Store: ");
+		OutputDebugStringW(entryStructP.title);
+		LogMessage(", x = %d\n", entryStructP.rect.left);
 		myfile
 			<< entryStructP.hwnd << '\t'
 			<< entryStructP.title << '\t'
@@ -72,30 +75,35 @@ void removeTempConfigFor(std::string configName) {
 
 void applyConfig(std::string configName, std::vector<OpenWindowsStruct*>* titles) {
 	std::wifstream myfile;
+	LogMessage("Loading: %s\n", configName.c_str());
 	myfile.open(configName);
-	std::wstring line;
-	while (getline(myfile, line)) {
-		OutputDebugStringW(L"From file: \n");
-		std::vector<std::string> splitted = splitString(WstrToUtf8Str(line), '\t');
-		if (splitted.size() > 5) {
-			for (std::vector<OpenWindowsStruct*>::iterator it = titles->begin(); it != titles->end(); ++it) {
-				OpenWindowsStruct entryStructP = **it;
-				if (prependZeros(splitted[0], 8) == toHex_string((unsigned int)entryStructP.hwnd)) {
-					int left = string_to_int(splitted[6]);
-					int top = string_to_int(splitted[7]);
-					int right = string_to_int(splitted[8]);
-					int bottom = string_to_int(splitted[9]);
-					SetWindowPos(entryStructP.hwnd,
-						HWND_TOP,
-						left,
-						top,
-						right - left, bottom - top,          // Ignores size arguments. 
-						SWP_ASYNCWINDOWPOS | SWP_NOACTIVATE | SWP_NOZORDER);
+	if (myfile.good()) {
+		std::wstring line;
+		while (getline(myfile, line)) {
+			OutputDebugStringW(L"From file: ");
+			LogMessage("%s\n", WstrToUtf8Str(line).c_str() );
+			std::vector<std::string> splitted = splitString(WstrToUtf8Str(line), '\t');
+			if (splitted.size() > 5) {
+				for (std::vector<OpenWindowsStruct*>::iterator it = titles->begin(); it != titles->end(); ++it) {
+					OpenWindowsStruct entryStructP = **it;
+					if (prependZeros(splitted[0], 8) == toHex_string((unsigned int)entryStructP.hwnd)) {
+						int left = string_to_int(splitted[6]);
+						int top = string_to_int(splitted[7]);
+						int right = string_to_int(splitted[8]);
+						int bottom = string_to_int(splitted[9]);
+						LogMessage("Restore: %s, x=%d\n", splitted[1].c_str(), left);
+						SetWindowPos(entryStructP.hwnd,
+							HWND_TOP,
+							left,
+							top,
+							right - left, bottom - top,          // Ignores size arguments. 
+							SWP_ASYNCWINDOWPOS | SWP_NOACTIVATE | SWP_NOZORDER);
 
+					}
 				}
 			}
 		}
+		myfile.close();
 	}
-	myfile.close();
 }
 

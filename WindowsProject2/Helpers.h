@@ -20,3 +20,4 @@ std::string WstrToUtf8Str(const std::wstring& wstr);
 std::vector<std::string> splitString(std::string toBeSplitted, char delimiter);
 std::string toHex_string(unsigned int i);
 int string_to_int(std::string s);
+void LogMessage( const char* pszFormat, ...);
