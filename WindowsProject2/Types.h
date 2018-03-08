@@ -10,4 +10,6 @@ struct OpenWindowsStruct {
 	RECT rect;
 };
 
+#define OWS_VEC_PTR std::vector<OpenWindowsStruct*>*
+
 
