@@ -20,6 +20,7 @@
 #include "WindowData.h"
 
 std::map<std::string, WindowData> storage;
+std::map<std::string, WindowData> temporaryStorage;
 
 std::string getConfigFingerprint() {
 	int horizontal = 0;
@@ -39,6 +40,11 @@ bool configExistsForFingerprint(const std::string &configName) {
 	return it != storage.end();
 }
 
+bool tempConfigExistsForFingerprint(const std::string &configName) {
+	std::map<std::string, WindowData>::iterator it = temporaryStorage.find(configName);
+	return it != temporaryStorage.end();
+}
+
 WCHAR* makeWStrCopy(WCHAR* str) {
 	return NULL;
 }
@@ -52,9 +58,15 @@ void cleanUp(OWS_VEC_PTR* titles) {
 
 void removeConfigIfExists( std::string &configName) {
 	if (configExistsForFingerprint(configName)) {
-		LogMessage("Remove config2 %s", configName.c_str());
 		WindowData oldConfig = storage.at(configName);
 		storage.erase(configName);
+	}
+}
+
+void removeTempConfigIfExists(std::string &configName) {
+	if (tempConfigExistsForFingerprint(configName)) {
+		WindowData oldConfig = temporaryStorage.at(configName);
+		temporaryStorage.erase(configName);
 	}
 }
 
@@ -64,12 +76,19 @@ void storeConfig(std::string configName, OWS_VEC_PTR* titles) {
 }
 
 void moveTempConfigsOtherThanToCurrent(std::string configName) {
-	// TODO
-}
+	std::vector<std::string> toBeMovedToMainStorage;
+	for (std::map<std::string, WindowData>::iterator it = temporaryStorage.begin(); it != temporaryStorage.end(); ++it) {
+		std::string storedConfigName = it->first;
+		if (storedConfigName != configName) {
+			toBeMovedToMainStorage.push_back(storedConfigName);
+		}
+	}
 
-void removeTempConfigFor(std::string configName) {
-	std::string configToBeRemoved = configName + "-temp";
-	removeConfigIfExists(configToBeRemoved);
+	for (std::vector<std::string>::iterator it = toBeMovedToMainStorage.begin(); it != toBeMovedToMainStorage.end(); ++it) {
+		std::string tempConfigName = *it;
+		storage.insert(std::pair<std::string, WindowData>(configName, temporaryStorage.at(tempConfigName)));
+		temporaryStorage.erase(tempConfigName);
+	}
 }
 
 void applyConfig(std::string configName, OWS_VEC_PTR* titles) {
@@ -77,7 +96,6 @@ void applyConfig(std::string configName, OWS_VEC_PTR* titles) {
 		LogMessage("No config for key %s", configName.c_str());
 		return;
 	}
-	LogMessage("Applying: %s\n", configName.c_str());
 	WindowData config = storage.at(configName);
 	std::vector<WindowDataEntry> entries = config.getEntries();
 	for (std::vector<WindowDataEntry>::iterator configIt = entries.begin(); configIt != entries.end(); ++configIt) {

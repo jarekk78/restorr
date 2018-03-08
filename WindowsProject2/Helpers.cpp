@@ -121,3 +121,6 @@ int string_to_int(std::string s) {
 	return std::stoi(s, nullptr);
 }
 
+bool startsWith(std::string s, std::string prefix) {
+	return (s.size() >= prefix.size() && s.substr(0, prefix.size()) == prefix);
+}
