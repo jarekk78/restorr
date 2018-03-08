@@ -17,8 +17,8 @@
 
 std::string getConfigFingerprint();
 bool configExistsForFingerprint(const std::string &configName);
-void storeConfig(std::string configName, std::vector<OpenWindowsStruct*>* titles);
-void cleanUp(std::vector<OpenWindowsStruct*>* titles);
+void storeConfig(std::string configName, OWS_VEC_PTR* titles);
 void moveTempConfigsOtherThanToCurrent(std::string configName);
 void removeTempConfigFor(std::string configName);
-void applyConfig(std::string configName, std::vector<OpenWindowsStruct*>* titles);
+void applyConfig(std::string configName, OWS_VEC_PTR* titles);
+void cleanUp(OWS_VEC_PTR* titles);

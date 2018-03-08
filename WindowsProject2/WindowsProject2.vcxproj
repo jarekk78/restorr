@@ -155,17 +155,21 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Types.h" />
+    <ClInclude Include="WindowData.h" />
+    <ClInclude Include="WindowDataEntry.h" />
     <ClInclude Include="WindowsProject2.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ConfigStorage.cpp" />
     <ClCompile Include="Helpers.cpp" />
+    <ClCompile Include="WindowData.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="WindowDataEntry.cpp" />
     <ClCompile Include="WindowsProject2.cpp" />
   </ItemGroup>
   <ItemGroup>
