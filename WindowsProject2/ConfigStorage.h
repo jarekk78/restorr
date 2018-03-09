@@ -17,6 +17,7 @@
 
 std::string getConfigFingerprint();
 bool configExistsForFingerprint(const std::string &configName);
+std::string getConfigurationDescriptionStr();
 void storeConfig(std::string configName, OWS_VEC_PTR* titles);
 void moveTempConfigsOtherThanToCurrent(std::string configName);
 void removeTempConfigIfExists(std::string &configName);

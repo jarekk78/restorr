@@ -35,6 +35,19 @@ std::string getConfigFingerprint() {
 	return stringStream.str();
 }
 
+std::string getConfigurationDescriptionStr() {
+	int horizontal = 0;
+	int vertical = 0;
+	GetDesktopResolution(horizontal, vertical);
+
+	int monitorCount = GetSystemMetrics(SM_CMONITORS);
+
+	std::ostringstream stringStream;
+	stringStream << vertical << "x" << horizontal << "_" << monitorCount << "_" << GetSystemMetrics(SM_XVIRTUALSCREEN) << "x" << GetSystemMetrics(SM_YVIRTUALSCREEN)
+		<< "_" << GetSystemMetrics(SM_CXVIRTUALSCREEN) << "x" << GetSystemMetrics(SM_CYVIRTUALSCREEN);
+	return stringStream.str();
+}
+
 bool configExistsForFingerprint(const std::string &configName) {
 	std::map<std::string, WindowData>::iterator it = storage.find(configName);
 	return it != storage.end();
