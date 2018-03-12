@@ -30,7 +30,7 @@ std::string getConfigFingerprint() {
 	int monitorCount = GetSystemMetrics(SM_CMONITORS);
 
 	std::ostringstream stringStream;
-	stringStream << vertical << "x" << horizontal << "_" << monitorCount << "_" << GetSystemMetrics(SM_XVIRTUALSCREEN) << "x" << GetSystemMetrics(SM_YVIRTUALSCREEN)
+	stringStream << horizontal << "x" << vertical << "_" << monitorCount << "_" << GetSystemMetrics(SM_XVIRTUALSCREEN) << "x" << GetSystemMetrics(SM_YVIRTUALSCREEN)
 		<< "_" << GetSystemMetrics(SM_CXVIRTUALSCREEN) << "x" << GetSystemMetrics(SM_CYVIRTUALSCREEN);
 	return stringStream.str();
 }
@@ -43,8 +43,12 @@ std::string getConfigurationDescriptionStr() {
 	int monitorCount = GetSystemMetrics(SM_CMONITORS);
 
 	std::ostringstream stringStream;
-	stringStream << vertical << "x" << horizontal << "_" << monitorCount << "_" << GetSystemMetrics(SM_XVIRTUALSCREEN) << "x" << GetSystemMetrics(SM_YVIRTUALSCREEN)
-		<< "_" << GetSystemMetrics(SM_CXVIRTUALSCREEN) << "x" << GetSystemMetrics(SM_CYVIRTUALSCREEN);
+	stringStream << 
+		monitorCount << " display" << ((monitorCount>1)?"s":"") << ", resolution: " << 
+		horizontal << "x" << vertical << 
+		" (virtual screen: " << GetSystemMetrics(SM_CXVIRTUALSCREEN) << "x" << GetSystemMetrics(SM_CYVIRTUALSCREEN)
+		<< ", main display at " << -GetSystemMetrics(SM_XVIRTUALSCREEN) << "x" << -GetSystemMetrics(SM_YVIRTUALSCREEN)
+		<< ")";
 	return stringStream.str();
 }
 
