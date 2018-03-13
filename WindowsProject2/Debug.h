@@ -1,9 +1,6 @@
 #pragma once
 
-// detecting memory leaks (remove to disable)
-#define MEM_LEAKS_DETECTION 1
-
-#if defined(MEM_LEAKS_DETECTION)
+#ifndef NDEBUG
 #define _CRTDBG_MAP_ALLOC  
 #include <stdlib.h>  
 #include <crtdbg.h> 

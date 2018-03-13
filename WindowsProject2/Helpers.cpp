@@ -53,7 +53,7 @@ std::wstring utf8toUtf16(const std::string & str)
 
 	std::vector<wchar_t> buffer(charsNeeded);
 	int charsConverted = ::MultiByteToWideChar(CP_UTF8, 0,
-		str.data(), (int)str.size(), &buffer[0], buffer.size());
+		str.data(), (int)str.size(), &buffer[0], (int)buffer.size());
 	if (charsConverted == 0)
 		throw std::runtime_error("Failed converting UTF-8 string to UTF-16");
 
@@ -81,7 +81,7 @@ std::string WstrToUtf8Str(const std::wstring& wstr)
 		{
 			std::vector<char> utf8String(sizeRequired);
 			int bytesConverted = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(),
-				-1, &utf8String[0], utf8String.size(), NULL,
+				-1, &utf8String[0], (int)utf8String.size(), NULL,
 				NULL);
 			if (bytesConverted != 0)
 			{
