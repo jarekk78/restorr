@@ -57,3 +57,10 @@ LONG WindowDataEntry::getBottom() {
 bool WindowDataEntry::hasHwnd(HWND h) {
 	return h == this->hwnd;
 }
+
+void WindowDataEntry::setShowCmd(UINT showCmd) {
+	this->showCmd = showCmd;
+}
+UINT WindowDataEntry::getShowCmd() {
+	return this->showCmd;
+}

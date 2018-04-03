@@ -108,7 +108,19 @@ void moveTempConfigsOtherThanToCurrent(std::string configName) {
 	}
 }
 
+void moveWindowToNearestScreen(LONG &left, LONG &top, LONG &right, LONG &bottom, MonitorRects &monitors) {
+	if (left == -32000 && top == -32000) return;
+
+//	RECT windowTitleRect;
+	int mCaptionHeight = (GetSystemMetrics(SM_CYFRAME) + GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CXPADDEDBORDER));
+	for (std::vector<RECT>::iterator it = monitors.rcMonitors.begin(); it != monitors.rcMonitors.end(); ++it) {
+//		*it->
+	}
+}
+
 void applyConfig(std::string configName, OWS_VEC_PTR* titles) {
+	MonitorRects monitors;
+		
 	if (!configExistsForFingerprint(configName)) {
 		LogMessage("No config for key %s", configName.c_str());
 		return;
@@ -122,9 +134,24 @@ void applyConfig(std::string configName, OWS_VEC_PTR* titles) {
 			if (configEntry.hasHwnd(entryStructP.hwnd)) {
 				LONG left = configEntry.getLeft();
 				LONG top = configEntry.getTop();
-				SetWindowPos(entryStructP.hwnd, HWND_TOP, 
-					left, top, configEntry.getRight() - left, configEntry.getBottom() - top, 
-					SWP_ASYNCWINDOWPOS | SWP_NOACTIVATE | SWP_NOZORDER);
+				LONG right = configEntry.getRight();
+				LONG bottom = configEntry.getBottom();
+				moveWindowToNearestScreen(left, top, right, bottom, monitors);
+				WINDOWPLACEMENT windowPlacement;
+				windowPlacement.length = sizeof(WINDOWPLACEMENT);
+				windowPlacement.rcNormalPosition.left = left;
+				windowPlacement.rcNormalPosition.top = top;
+				windowPlacement.rcNormalPosition.right = right;
+				windowPlacement.rcNormalPosition.bottom = bottom;
+				windowPlacement.showCmd = configEntry.getShowCmd();
+				if (windowPlacement.showCmd != SW_MAXIMIZE && windowPlacement.showCmd != SW_SHOWMINIMIZED) windowPlacement.showCmd = SW_SHOWNORMAL;
+				SetWindowPlacement(entryStructP.hwnd, &windowPlacement);
+				GetWindowPlacement(entryStructP.hwnd, &windowPlacement);
+				if (windowPlacement.showCmd == SW_SHOWNORMAL && windowPlacement.rcNormalPosition.left == left && windowPlacement.rcNormalPosition.top == top) {
+					SetWindowPos(entryStructP.hwnd, HWND_TOP,
+						left, top, configEntry.getRight() - left, configEntry.getBottom() - top,
+						SWP_ASYNCWINDOWPOS | SWP_NOACTIVATE | SWP_NOZORDER);
+				}
 			}
 		}
 	}

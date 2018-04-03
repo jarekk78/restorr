@@ -12,6 +12,7 @@ WindowData::WindowData(std::vector<OpenWindowsStruct*>* t) {
 		e.setIsZoomed((*it)->isZoomed);
 		e.setIsIconic((*it)->isIconic);
 		e.setRect((*it)->rect);
+		e.setShowCmd((*it)->showCmd);
 		data.push_back(e);
 	}
 }

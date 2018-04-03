@@ -19,6 +19,8 @@ public:
 	LONG getRight();
 	LONG getBottom();
 	bool hasHwnd(HWND h);
+	void setShowCmd(UINT showCmd);
+	UINT getShowCmd();
 private:
 	HWND hwnd;
 	std::wstring title;
@@ -30,4 +32,5 @@ private:
 	LONG top;
 	LONG right;
 	LONG bottom;
+	UINT showCmd;
 };
